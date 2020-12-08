@@ -11,41 +11,49 @@ def populate():
     python_pages = [
         {
             'title': 'Official Python Tutorial',
-            'url': 'http://docs.python.org/3/tutorial/'
+            'url': 'http://docs.python.org/3/tutorial/',
+            'views': 23
         },
         {
             'title': 'How to Think like a Computer Scientist',
-            'url': 'http://www.greenteapress.com/thinkpython/'
+            'url': 'http://www.greenteapress.com/thinkpython/',
+            'views': 434
         },
         {
             'title': 'Learn Python in 10 Minutes',
-            'url': 'http://www.korokithakis.net/tutorials/python/'
+            'url': 'http://www.korokithakis.net/tutorials/python/',
+            'views': 13
         }
     ]
 
     django_pages = [
         {
             'title': 'Official Django Tutorial',
-            'url': 'https://docs.djangoproject.com/en/2.1/intro/tutorial01/'
+            'url': 'https://docs.djangoproject.com/en/2.1/intro/tutorial01/',
+            'views': 89
         },
         {
             'title': 'Django Rocks',
-            'url': 'http://www.djangorocks.com/'
+            'url': 'http://www.djangorocks.com/',
+            'views': 9
         },
         {
             'title': 'How to Tango with Django',
-            'url': 'http://www.tangowithdjango.com/'
+            'url': 'http://www.tangowithdjango.com/',
+            'views': 327
         }
     ]
 
     other_pages = [
         {
             'title': 'Bottle',
-            'url': 'http://bottlepy.org/docs/dev/'
+            'url': 'http://bottlepy.org/docs/dev/',
+            'views': 2373
         },
         {
             'title': 'Flask',
-            'url': 'http://flask.pocoo.org'
+            'url': 'http://flask.pocoo.org',
+            'views': 2
         }
     ]
 
@@ -71,7 +79,7 @@ def populate():
     for cat, cat_data in cats.items():
         c = add_cat(cat, cat_data)
         for page in cat_data['pages']:
-            add_page(c, page['title'], page['url'])
+            add_page(c, page['title'], page['url'], page['views'])
 
     # Display all the newly added objects
     for cat in Category.objects.all():
