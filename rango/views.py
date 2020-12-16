@@ -17,8 +17,7 @@ def index(request):
     context_dict = {
         'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!',
         'categories': category_list,
-        'pages': page_list,
-        'visits': request.session['visits']
+        'pages': page_list
     }
 
     return render(request, 'rango/index.html', context=context_dict)
@@ -152,8 +151,10 @@ def add_page(request, category_name_slug):
 
 
 def about(request):
+    visitor_cookie_handler(request)
     context_dict = {
-        'boldmessage': 'This tutorial has been put together by Peter Hu'
+        'boldmessage': 'This tutorial has been put together by Peter Hu',
+        'visits': request.session['visits']
     }
     return render(request, 'rango/about.html', context=context_dict)
 
