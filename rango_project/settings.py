@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rango'
+    'rango',
+    'registration'  # django-registration-redux
 ]
 
 MIDDLEWARE = [
@@ -132,5 +133,10 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# Redirect path when a @login_required decorated view is accessed without authentication
-LOGIN_URL = 'rango:login'
+# Authentication redirects
+LOGIN_URL = 'auth_login'
+LOGIN_REDIRECT_URL = 'rango:index'
+
+# django-registration-redux configs
+REGISTRATION_OPEN = True
+REGISTRATION_AUTO_LOGIN = True

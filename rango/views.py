@@ -23,67 +23,6 @@ def index(request):
     return render(request, 'rango/index.html', context=context_dict)
 
 
-def register(request):
-    # indicates whether the registration was successful or not
-    registered = False
-    if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-
-            # Hash the password with the set_password method
-            user.set_password(user.password)
-            user.save()
-
-            # Delay saving the model until after manually setting other attributes
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-            profile.save()
-
-            # Indicate registration was a success
-            registered = True
-        else:
-            print(user_form.errors, profile_form.errors)
-    else:
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-
-    context_dict = {
-        'user_form': user_form,
-        'profile_form': profile_form,
-        'registered': registered
-    }
-
-    return render(request, 'rango/register.html', context=context_dict)
-
-
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(username=username, password=password)
-        if user:
-            # Account could have been disabled
-            if user.is_active:
-                login(request, user)
-                return redirect(reverse('rango:index'))
-        else:
-            print(f'Invalid login details: {username}, {password}')
-            return HttpResponse('Invalid login details supplied')
-    else:
-        return render(request, 'rango/login.html')
-
-
-@login_required
-def user_logout(request):
-    logout(request)
-    return redirect(reverse('rango:index'))
-
-
 @login_required
 def restricted(request):
     return render(request, 'rango/restricted.html')
