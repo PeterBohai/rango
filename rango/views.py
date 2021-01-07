@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.bing_search import run_query
 
 
 def index(request):
@@ -96,6 +97,22 @@ def about(request):
         'visits': request.session['visits']
     }
     return render(request, 'rango/about.html', context=context_dict)
+
+
+def search(request):
+    result_list = []
+    query = ''
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+
+    context_dict = {
+        'result_list': result_list,
+        'prev_query': query
+    }
+    return render(request, 'rango/search.html', context=context_dict)
 
 
 # Helper Functions
