@@ -1,0 +1,16 @@
+{% extends 'rango/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Profile Registration
+{% endblock %}
+
+{% block body_block %}
+    <div class="jumbotron p-4">
+        <div class="container">
+            <h1>{{ user.username }}'s Profile</h1>
+        </div>
+    </div>
+    <img src="{{ MEDIA_URL }}{{ user_picture }}" alt="{{ user.username }}'s profile picture" />
+    <p>website: <a href="{{ user_website }}">{{ user_website }}</a></p>
+{% endblock %}

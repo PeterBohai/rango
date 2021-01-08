@@ -1,0 +1,17 @@
+{% extends 'rango/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Profiles
+{% endblock %}
+
+{% block body_block %}
+    <div class="jumbotron p-4">
+        <div class="container">
+            <h1>Profiles</h1>
+        </div>
+    </div>
+    {% for profile in profiles %}
+        <li><a href="{% url 'rango:profile' profile.username %}">{{ profile.username }}</a></li>
+    {% endfor %}
+{% endblock %}
