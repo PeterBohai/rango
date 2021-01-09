@@ -12,11 +12,29 @@
             <h2 class="h2">here is the about page.</h2>
         </div>
     </div>
-    <div>
+    <div class="mb-3">
         <p>Visits: {{ visits }}</p>
         <strong>{{ boldmessage }}</strong><br />
-
-        <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
-        <img src="{{ MEDIA_URL }}cat.jpg" alt="Picture of a Cat" />
     </div>
+    <div class="mb-3">
+        <button class="btn btn-primary"
+                onclick="alert('Clicked button using INLINE JavaScript');">
+            Click me - I run vanilla JavaScript!
+        </button>
+
+        <button class="btn btn-primary"
+                id="about-btn">
+            Click me - I'm using JQeury!
+        </button>
+        <p class="mt-2 mb-2">This is some random text to test out JQuery.</p>
+        <div class="font-weight-bold" id="msg">Hello! I'm a furhter example for JQuery testing.</div>
+    </div>
+
+    <img src="{% static 'images/rango.jpg' %}"
+         class="mt-3"
+         width="130"
+         alt="Picture of Rango" />
+    <img src="{{ MEDIA_URL }}cat.jpg"
+         width="130"
+         alt="Picture of a Cat" />
 {% endblock %}
