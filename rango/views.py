@@ -1,7 +1,9 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, reverse
+from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from rango.models import Category, Page, UserProfile, User
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -24,14 +26,28 @@ def index(request):
     return render(request, 'rango/index.html', context=context_dict)
 
 
+class IndexView(View):
+    def get(self, request):
+        # Retrieve a list of the top 5 liked catgories
+        category_list = Category.objects.order_by('-likes')[:5]
+        page_list = Page.objects.order_by('-views')[:5]
+
+        visitor_cookie_handler(request)
+        context_dict = {
+            'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!',
+            'categories': category_list,
+            'pages': page_list
+        }
+
+        return render(request, 'rango/index.html', context=context_dict)
+
+
 @login_required
 def restricted(request):
     return render(request, 'rango/restricted.html')
 
 
 def show_category(request, category_name_slug):
-    result_list = []
-    query = ''
     context_dict = {}
 
     try:
@@ -44,13 +60,12 @@ def show_category(request, category_name_slug):
         context_dict['pages'] = None
         context_dict['category'] = None
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated:
         query = request.POST['query'].strip()
         if query:
             result_list = run_query(query)
-
-    context_dict['result_list'] = result_list
-    context_dict['prev_query'] = query
+            context_dict['result_list'] = result_list
+            context_dict['prev_query'] = query
 
     return render(request, 'rango/category.html', context=context_dict)
 
@@ -67,6 +82,23 @@ def add_category(request):
             print(form.errors)
 
     return render(request, 'rango/add_category.html', {'form': form})
+
+
+class AddCategoryView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        form = CategoryForm()
+        return render(request, 'rango/add_category.html', {'form': form})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect(reverse('rango:index'))
+        else:
+            print(form.errors)
+        return render(request, 'rango/add_category.html', {'form': form})
 
 
 @login_required
@@ -110,16 +142,26 @@ def about(request):
     return render(request, 'rango/about.html', context=context_dict)
 
 
+class AboutView(View):
+    def get(self, request):
+        visitor_cookie_handler(request)
+        context_dict = {
+            'boldmessage': 'This tutorial has been put together by Peter Hu',
+            'visits': request.session['visits']
+        }
+        return render(request, 'rango/about.html', context=context_dict)
+
+
 def goto_url(request):
     if request.method == 'GET':
         page_id = request.GET.get('page_id')
         try:
             page = Page.objects.get(pk=page_id)
-            page.views += 1
-            page.save()
-            return redirect(page.url)
-        except:
+        except Page.DoesNotExist:
             return redirect(reverse('rango:index'))
+        page.views += 1
+        page.save()
+        return redirect(page.url)
     return redirect(reverse('rango:index'))
 
 
@@ -128,7 +170,7 @@ def register_profile(request):
     form = UserProfileForm()
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST)
+        form = UserProfileForm(request.POST, request.FILES)
         if form.is_valid():
             user_profile = form.save(commit=False)
             user_profile.user = request.user
