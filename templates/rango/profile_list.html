@@ -8,10 +8,38 @@
 {% block body_block %}
     <div class="jumbotron p-4">
         <div class="container">
-            <h1>Profiles</h1>
+            <h1 class="jumbotron-heading">User Profiles</h1>
         </div>
     </div>
-    {% for profile in profiles %}
-        <li><a href="{% url 'rango:profile' profile.username %}">{{ profile.username }}</a></li>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            {% if user_profiles %}
+                <div class="panel-body">
+                    <div class="list-group">
+                        {% for user_profile in user_profiles %}
+                            <div class="list-group-item">
+                                {% if user_profile.picture %}
+                                    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
+                                         width="64"
+                                         height="64"
+                                         alt="{{ user_profile.user.username }}'s profile thumbnail" />
+                                {% else %}
+                                     <img src="http://via.placeholder.com/64x64"
+                                         width="64"
+                                         height="64"
+                                         alt="{{ user_profile.user.username }}'s placeholder thumbnail" />
+                                {% endif %}
+
+                                <h4 class="list-group-item-heading d-inline ml-2">
+                                    <a href="{% url 'rango:profile' user_profile.user.username %}">{{ user_profile.user.username }}</a>
+                                </h4>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p>There are no users present on Rango.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

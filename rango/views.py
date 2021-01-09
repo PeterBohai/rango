@@ -168,14 +168,51 @@ class RegisterProfileView(View):
 
 
 class ProfileView(View):
+    def get_user_details(self, username):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
+        form = UserProfileForm({
+            'website': user_profile.website,
+            'picture': user_profile.picture
+        })
+
+        return user, user_profile, form
+
     @method_decorator(login_required)
     def get(self, request, username):
-        user = User.objects.get(username=username)
-        user_profile = UserProfile.objects.get(user=user)
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('rango:index'))
         context_dict = {
-            'user': user,
-            'user_website': user_profile.website,
-            'user_picture': user_profile.picture
+            'selected_user': user,
+            'user_profile': user_profile,
+            'form': form
+        }
+        return render(request, 'rango/profile.html', context=context_dict)
+
+    @method_decorator(login_required)
+    def post(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('rango:index'))
+
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid() and user == request.user:
+            form.save(commit=True)
+            return redirect('rango:profile', user.username)
+        else:
+            print(form.errors)
+
+        context_dict = {
+            'selected_user': user,
+            'user_profile': user_profile,
+            'form': form
         }
         return render(request, 'rango/profile.html', context=context_dict)
 
@@ -183,8 +220,8 @@ class ProfileView(View):
 class ProfileListView(View):
     @method_decorator(login_required)
     def get(self, request):
-        profiles = User.objects.all()
-        return render(request, 'rango/profile_list.html', context={'profiles': profiles})
+        profiles = UserProfile.objects.all()
+        return render(request, 'rango/profile_list.html', context={'user_profiles': profiles})
 
 
 # Helper Functions

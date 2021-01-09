@@ -8,9 +8,40 @@
 {% block body_block %}
     <div class="jumbotron p-4">
         <div class="container">
-            <h1>{{ user.username }}'s Profile</h1>
+            <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
         </div>
     </div>
-    <img src="{{ MEDIA_URL }}{{ user_picture }}" alt="{{ user.username }}'s profile picture" />
-    <p>website: <a href="{{ user_website }}">{{ user_website }}</a></p>
+    <div class="container">
+        <div class="row">
+            {% if user_profile.picture %}
+                <img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
+                 width="300"
+                 height="300"
+                 alt="{{ selected_user.username }}'s profile picture" />
+            {% else %}
+                 <img src="http://via.placeholder.com/300x300"
+                     width="300"
+                     height="300"
+                     alt="{{ selected_user.username }}'s placeholder profile picture" />
+            {% endif %}
+
+            <br />
+            <div>
+                {% if selected_user == user %}
+                    <form method="post" action="." enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Update" />
+                    </form>
+                {% else %}
+                    <p>
+                        <strong>Website:</strong>
+                        <a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
+                    </p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
 {% endblock %}
