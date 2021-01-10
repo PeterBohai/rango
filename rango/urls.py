@@ -13,5 +13,8 @@ urlpatterns = [
     path('goto/', views.GoToUrlView.as_view(), name='goto'),
     path('profile/<str:username>/', views.ProfileView.as_view(), name='profile'),
     path('profile_list/', views.ProfileListView.as_view(), name='profile_list'),
-    path('register_profile/', views.RegisterProfileView.as_view(), name='register_profile')
+    path('register_profile/', views.RegisterProfileView.as_view(), name='register_profile'),
+    path('like_category/', views.LikeCategoryView.as_view(), name='like_category'),
+    path('suggest/', views.CategorySuggestionView.as_view(), name='suggest'),
+    path('search_add_page/', views.SearchAddPageView.as_view(), name='add_page')
 ]

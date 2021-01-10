@@ -72,7 +72,42 @@ def populate():
             'pages': other_pages,
             'views': 32,
             'likes': 16
-        }
+        },
+        'Perl': {
+            'pages': [],
+            'views': 1,
+            'likes': 9
+        },
+        'PHP': {
+            'pages': [],
+            'views': 2,
+            'likes': 7
+        },
+        'Prolog': {
+            'pages': [],
+            'views': 1,
+            'likes': 5
+        },
+        'PostScript': {
+            'pages': [],
+            'views': 3,
+            'likes': 42
+        },
+        'Programming': {
+            'pages': [],
+            'views': 3,
+            'likes': 323
+        },
+        'Puppies': {
+            'pages': [],
+            'views': 6,
+            'likes': 2
+        },
+        'Another One': {
+            'pages': [],
+            'views': 4,
+            'likes': 3
+        },
     }
 
     # Save each category and their associated pages to the database
