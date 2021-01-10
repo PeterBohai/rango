@@ -15,3 +15,4 @@ db.sqlite3
 db.sqlite3-journal
 profile_images/
 secrets.py
+.coverage

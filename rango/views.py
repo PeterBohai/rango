@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 from django.shortcuts import render, redirect, reverse
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -142,6 +143,7 @@ class GoToUrlView(View):
         except Page.DoesNotExist:
             return redirect(reverse('rango:index'))
         page.views += 1
+        page.last_visit = timezone.now()
         page.save()
         return redirect(page.url)
 
